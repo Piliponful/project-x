@@ -8,5 +8,9 @@
   },
   "keywords": [],
   "author": "piliponful <piliponful@gmail.com>",
-  "license": "ISC"
+  "license": "ISC",
+  "dependencies": {
+    "srpc-framework": "^1.0.17",
+    "standard": "^14.3.3"
+  }
 }
