@@ -1,0 +1,12 @@
+{
+  "name": "project-x",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "piliponful <piliponful@gmail.com>",
+  "license": "ISC"
+}
