@@ -11,10 +11,14 @@
   "author": "piliponful <piliponful@gmail.com>",
   "license": "ISC",
   "dependencies": {
+    "bcryptjs": "^2.4.3",
     "esm": "^3.2.25",
+    "jwt-simple": "^0.5.6",
+    "lodash": "^4.17.15",
     "mongodb": "^3.5.5",
     "nodemon": "^2.0.2",
     "srpc-framework": "^1.0.17",
-    "standard": "^14.3.3"
+    "standard": "^14.3.3",
+    "twilio": "^3.42.0"
   }
 }

@@ -2,10 +2,12 @@ import { createHttpSrpcServer, defaultCallFunction } from 'srpc-framework'
 
 import saveMessage from './functions/saveMessage'
 import getMessages from './functions/getMessages'
+import createUser from './functions/createUser'
 
 const functions = {
   saveMessage,
-  getMessages
+  getMessages,
+  createUser
 }
 
 const port = 8080
