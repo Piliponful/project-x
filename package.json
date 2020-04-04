@@ -4,6 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
+    "dev": "nodemon -r esm index",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
@@ -12,6 +13,7 @@
   "dependencies": {
     "esm": "^3.2.25",
     "mongodb": "^3.5.5",
+    "nodemon": "^2.0.2",
     "srpc-framework": "^1.0.17",
     "standard": "^14.3.3"
   }
