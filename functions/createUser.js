@@ -3,7 +3,7 @@ import Twilio from 'twilio'
 import bcrypt from 'bcryptjs'
 import { encode as encodeJwt } from 'jwt-simple'
 
-const secret = 'skjdajskldfjklasjdkfjaslk'
+import { secret } from '../constants/jwtSecret'
 
 const sendVerificationCode = async (phoneNumber, verificationCode) => {
   const accountSid = 'ACff5c44f7a932acb3f57035070219a430'
