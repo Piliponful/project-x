@@ -3,7 +3,7 @@ import Twilio from 'twilio'
 import bcrypt from 'bcryptjs'
 import { encode as encodeJwt } from 'jwt-simple'
 
-const secret = '28087258-1555-481e-8578-aedccdd9df30'
+const secret = 'skjdajskldfjklasjdkfjaslk'
 
 const sendVerificationCode = async (phoneNumber, verificationCode) => {
   const accountSid = 'ACff5c44f7a932acb3f57035070219a430'
@@ -42,11 +42,11 @@ const createUser = async ({ username, phoneNumber, password }) => {
 
   await sendVerificationCode(phoneNumber, verificationCode)
 
-  const result = await usersCollection.insertOne({ username, password: passwordHash, verified: false })
+  const { insertId: userId } = await usersCollection.insertOne({ username, password: passwordHash, verificationCode })
 
   await connectedClient.close()
 
-  const jwt = encodeJwt({ userId: result.insertedId, verified: false }, secret)
+  const jwt = encodeJwt({ userId }, secret)
 
   return { success: true, jwt }
 }

@@ -9,27 +9,26 @@ const getConnectedClient = async () => {
   return client
 }
 
-const saveMessage = async ({ jwt, content }) => {
+const verifyUser = async ({ jwt, verificationCode }) => {
   const connectedClient = await getConnectedClient()
 
   const db = connectedClient.db()
 
-  const messagesCollection = db.collection('messages')
   const usersCollection = db.collection('users')
 
   const { userId } = decodeJwt(jwt)
 
-  const user = await usersCollection.findOne({ _id: userId, verificationCode: { $exists: false } })
+  const user = await usersCollection.findOne({ _id: userId, verificationCode })
 
-  if (!user) {
+  if (user) {
+    await usersCollection.updateOne({ _id: userId }, { $unset: { verificationCode } })
+
+    await connectedClient.close()
+
+    return { success: true }
+  } else {
     return { success: false }
   }
-
-  const result = await messagesCollection.insertOne({ content })
-
-  await connectedClient.close()
-
-  return { success: true, message: { content, id: result.insertedId } }
 }
 
-export default saveMessage
+export default verifyUser
