@@ -1,6 +1,8 @@
 import { MongoClient } from 'mongodb'
 import { decode as decodeJwt } from 'jwt-simple'
 
+import { secret } from '../constants/jwtSecret'
+
 const getConnectedClient = async () => {
   const url = 'mongodb://piliponful:password123@localhost:27017/test'
 
@@ -16,7 +18,7 @@ const verifyUser = async ({ jwt, verificationCode }) => {
 
   const usersCollection = db.collection('users')
 
-  const { userId } = decodeJwt(jwt)
+  const { userId } = decodeJwt(jwt, secret)
 
   const user = await usersCollection.findOne({ _id: userId, verificationCode })
 
