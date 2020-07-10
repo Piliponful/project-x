@@ -1,13 +1,6 @@
-import { MongoClient } from 'mongodb'
 import { omit } from 'lodash'
 
-const getConnectedClient = async () => {
-  const url = 'mongodb://piliponful:password123@localhost:27017/test'
-
-  const client = await (new MongoClient(url, { useUnifiedTopology: true })).connect()
-
-  return client
-}
+import getConnectedClient from '../getConnectedClient'
 
 const getMessages = async () => {
   const connectedClient = await getConnectedClient()
