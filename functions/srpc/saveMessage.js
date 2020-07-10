@@ -1,15 +1,8 @@
-import { MongoClient } from 'mongodb'
 import { decode as decodeJwt } from 'jwt-simple'
 
-import { secret } from '../constants/jwtSecret'
+import getConnectedClient from '../getConnectedClient'
 
-const getConnectedClient = async () => {
-  const url = 'mongodb://piliponful:password123@localhost:27017/test'
-
-  const client = await (new MongoClient(url, { useUnifiedTopology: true })).connect()
-
-  return client
-}
+import { secret } from '../../constants/jwtSecret'
 
 const saveMessage = async ({ jwt, content }) => {
   const connectedClient = await getConnectedClient()

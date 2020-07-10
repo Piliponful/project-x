@@ -1,10 +1,10 @@
 import { createServer } from 'srpc-framework'
 import { createServer as createHttpServer } from 'http'
 
-import saveMessage from './functions/saveMessage'
-import getMessages from './functions/getMessages'
-import createUser from './functions/createUser'
-import verifyUser from './functions/verifyUser'
+import saveMessage from './functions/srpc/saveMessage'
+import getMessages from './functions/srpc/getMessages'
+import createUser from './functions/srpc/createUser'
+import verifyUser from './functions/srpc/verifyUser'
 
 import createUserValidation from './functions/paramsValidation/createUserValidation'
 import getMessagesValidation from './functions/paramsValidation/getMessagesValidation'
