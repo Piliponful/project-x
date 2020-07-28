@@ -1,4 +1,5 @@
 import { decode as decodeJwt } from 'jwt-simple'
+import { ObjectID } from 'mongodb'
 
 import getConnectedClient from '../getConnectedClient'
 
@@ -14,7 +15,7 @@ const saveMessage = async ({ jwt, content }) => {
 
   const { userId } = decodeJwt(jwt, secret)
 
-  const user = await usersCollection.findOne({ _id: userId, verificationCode: { $exists: false } })
+  const user = await usersCollection.findOne({ _id: new ObjectID(userId), verificationCode: { $exists: false } })
 
   if (!user) {
     return { success: false }
