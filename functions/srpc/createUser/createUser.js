@@ -19,7 +19,7 @@ const createUser = async ({ username, phoneNumber, password }) => {
 
   await sendVerificationCode(phoneNumber, verificationCode)
 
-  const { insertId: userId } = await usersCollection.insertOne({ username, password: passwordHash, verificationCode })
+  const { insertedId: userId } = await usersCollection.insertOne({ username, password: passwordHash, verificationCode })
 
   await connectedClient.close()
 
