@@ -21,10 +21,12 @@ const saveMessage = async ({ jwt, content, parentMessageId }) => {
     return { success: false }
   }
 
-  const responseMessage = await messagesCollection.findOne({ userId, parentMessageId })
+  if (parentMessageId) {
+    const responseMessage = await messagesCollection.findOne({ userId, parentMessageId })
 
-  if (responseMessage) {
-    return { success: false }
+    if (responseMessage) {
+      return { success: false }
+    }
   }
 
   const newMessage = { userId, content, parentMessageId }
