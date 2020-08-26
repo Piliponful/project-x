@@ -21,6 +21,12 @@ const saveMessage = async ({ jwt, content, parentMessageId }) => {
     return { success: false }
   }
 
+  const responseMessage = await messagesCollection.findOne({ userId, parentMessageId })
+
+  if (responseMessage) {
+    return { success: false }
+  }
+
   const result = await messagesCollection.insertOne({ userId, content, parentMessageId })
 
   await connectedClient.close()
