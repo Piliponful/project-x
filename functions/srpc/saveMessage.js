@@ -27,11 +27,13 @@ const saveMessage = async ({ jwt, content, parentMessageId }) => {
     return { success: false }
   }
 
-  const result = await messagesCollection.insertOne({ userId, content, parentMessageId })
+  const newMessage = { userId, content, parentMessageId }
+
+  const result = await messagesCollection.insertOne(newMessage)
 
   await connectedClient.close()
 
-  return { success: true, message: { content, id: result.insertedId } }
+  return { success: true, message: { ...newMessage, id: result.insertedId } }
 }
 
 export default saveMessage
