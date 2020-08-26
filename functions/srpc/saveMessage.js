@@ -5,7 +5,7 @@ import getConnectedClient from '../getConnectedClient'
 
 import { secret } from '../../constants/jwtSecret'
 
-const saveMessage = async ({ jwt, content }) => {
+const saveMessage = async ({ jwt, content, parentMessageId }) => {
   const connectedClient = await getConnectedClient()
 
   const db = connectedClient.db()
@@ -21,7 +21,7 @@ const saveMessage = async ({ jwt, content }) => {
     return { success: false }
   }
 
-  const result = await messagesCollection.insertOne({ userId, content })
+  const result = await messagesCollection.insertOne({ userId, content, parentMessageId })
 
   await connectedClient.close()
 
