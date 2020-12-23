@@ -27,9 +27,9 @@ const setSelectedGroup = async ({ jwt, groupId }) => {
     return { success: false }
   }
 
-  await groupsCollection.findOneAndUpdate({ selected: true }, { $unset: { selected: true } })
-
   await groupsCollection.updateOne({ _id: new ObjectID(groupId) }, { $set: { selected: true } })
+
+  await groupsCollection.findOneAndUpdate({ selected: true }, { $unset: { selected: true } })
 
   return { success: true }
 }
