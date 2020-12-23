@@ -1,7 +1,10 @@
 import { omit, difference, union, intersection } from 'lodash'
 import { ObjectID } from 'mongodb'
+import { decode as decodeJwt } from 'jwt-simple'
 
 import getConnectedClient from '../getConnectedClient'
+
+import { secret } from '../../constants/jwtSecret'
 
 const compositionFunctions = {
   difference,
@@ -40,15 +43,24 @@ const getMessagesByGroup = async (group, db) => {
   return messages
 }
 
-const getMessages = async ({ groupId } = {}) => {
+const getMessages = async ({ jwt }) => {
   const connectedClient = await getConnectedClient()
 
   const db = connectedClient.db()
 
   const messagesCollection = db.collection('messages')
   const groupsCollection = db.collection('groups')
+  const usersCollection = db.collection('users')
 
-  const group = groupId ? await groupsCollection.findOne({ _id: new ObjectID(groupId) }) : null
+  const { userId } = decodeJwt(jwt, secret)
+
+  const user = await usersCollection.findOne({ _id: new ObjectID(userId), verificationCode: { $exists: false } })
+
+  if (!user) {
+    return { success: false }
+  }
+
+  const group = await groupsCollection.findOne({ selected: true })
 
   if (!group) {
     const messages = (await messagesCollection.find().toArray()).map(i => ({ ...omit(i, '_id'), id: i._id }))
