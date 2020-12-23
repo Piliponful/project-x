@@ -27,6 +27,12 @@ const saveMessage = async ({ jwt, content, parentMessageId }) => {
     if (responseMessage) {
       return { success: false }
     }
+
+    const parentMessage = await messagesCollection.findOne({ _id: new ObjectID(parentMessageId) })
+
+    if (parentMessage.userId === userId) {
+      return { success: false }
+    }
   }
 
   const newMessage = { userId, content, parentMessageId }
