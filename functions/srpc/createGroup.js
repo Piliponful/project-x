@@ -11,7 +11,7 @@ const createGroup = async ({ jwt, messageId, content, name }) => {
   const db = connectedClient.db()
 
   const messagesCollection = db.collection('messages')
-  const groupCollection = db.collection('groups')
+  const groupsCollection = db.collection('groups')
   const usersCollection = db.collection('users')
 
   const { userId } = decodeJwt(jwt, secret)
@@ -28,9 +28,15 @@ const createGroup = async ({ jwt, messageId, content, name }) => {
     return { success: false }
   }
 
+  const group = await groupsCollection.findOne({ messageId, userId, content })
+
+  if (group) {
+    return { success: false }
+  }
+
   const newGroup = { userId, messageId, content, name }
 
-  const result = await groupCollection.insertOne(newGroup)
+  const result = await groupsCollection.insertOne(newGroup)
 
   return { success: true, group: { ...newGroup, id: result.insertedId } }
 }
