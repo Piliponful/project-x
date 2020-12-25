@@ -1,5 +1,6 @@
 import { decode as decodeJwt } from 'jwt-simple'
 import { ObjectID } from 'mongodb'
+import { omit } from 'lodash'
 
 import getConnectedClient from '../getConnectedClient'
 
@@ -27,11 +28,17 @@ const setSelectedGroup = async ({ jwt, groupId }) => {
     return { success: false }
   }
 
-  await groupsCollection.updateOne({ _id: new ObjectID(groupId) }, { $set: { selected: true } })
+  const currentlySelectedGroup = await groupsCollection.findOne({ selected: true })
+
+  const isToggle = currentlySelectedGroup && (currentlySelectedGroup._id.toString() === groupId)
 
   await groupsCollection.findOneAndUpdate({ selected: true }, { $unset: { selected: true } })
 
-  return { success: true }
+  if (!isToggle) {
+    await groupsCollection.findOneAndUpdate({ _id: new ObjectID(groupId) }, { $set: { selected: true } })
+  }
+
+  return { success: true, group: { ...omit(group, '_id'), id: group._id, selected: !isToggle } }
 }
 
 export default setSelectedGroup
