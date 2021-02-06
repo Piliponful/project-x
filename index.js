@@ -8,6 +8,7 @@ import verifyUser from './functions/srpc/verifyUser'
 import createGroup from './functions/srpc/createGroup'
 import getGroups from './functions/srpc/getGroups'
 import setSelectedGroup from './functions/srpc/setSelectedGroup'
+import createCompositeGroup from './functions/srpc/createCompositeGroup'
 
 import createUserValidation from './functions/paramsValidation/createUserValidation'
 import getMessagesValidation from './functions/paramsValidation/getMessagesValidation'
@@ -16,6 +17,7 @@ import verifyUserValidation from './functions/paramsValidation/verifyUserValidat
 import createGroupValidation from './functions/paramsValidation/createGroupValidation'
 import getGroupsValidation from './functions/paramsValidation/getGroupsValidation'
 import setSelectedGroupValidation from './functions/paramsValidation/setSelectedGroupValidation'
+import createCompositeGroupValidation from './functions/paramsValidation/createCompositeGroupValidation'
 
 const functions = {
   createUser,
@@ -24,7 +26,8 @@ const functions = {
   verifyUser,
   createGroup,
   getGroups,
-  setSelectedGroup
+  setSelectedGroup,
+  createCompositeGroup
 }
 
 const paramsValidationFunctions = {
@@ -34,7 +37,8 @@ const paramsValidationFunctions = {
   verifyUser: verifyUserValidation,
   createGroup: createGroupValidation,
   getGroups: getGroupsValidation,
-  setSelectedGroup: setSelectedGroupValidation
+  setSelectedGroup: setSelectedGroupValidation,
+  createCompositeGroup: createCompositeGroupValidation
 }
 
 const port = 8080
