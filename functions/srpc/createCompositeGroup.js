@@ -28,7 +28,7 @@ const createCompositeGroup = async ({ jwt, name, groupIdLeft, groupIdRight, comp
     return { success: false }
   }
 
-  const newGroup = { userId, name, groupIdLeft, groupIdRight, compositionType }
+  const newGroup = { userId, name, groupIdLeft, groupIdRight, compositionType, createdAt: Date.now() }
 
   const result = await groupsCollection.insertOne(newGroup)
 
