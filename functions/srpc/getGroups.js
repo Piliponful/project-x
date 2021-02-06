@@ -22,7 +22,7 @@ const getGroups = async ({ jwt }) => {
     return { success: false }
   }
 
-  const groups = (await groupsCollection.find().toArray()).map(i => ({ ...omit(i, '_id'), id: i._id }))
+  const groups = (await groupsCollection.find().sort('createdAt', -1).toArray()).map(i => ({ ...omit(i, '_id'), id: i._id }))
 
   await connectedClient.close()
 
