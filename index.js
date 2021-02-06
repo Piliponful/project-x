@@ -40,6 +40,8 @@ const paramsValidationFunctions = {
 const port = 8080
 const onStartText = `Server successfully launched on port ${port}`
 
+require('dotenv').config()
+
 const server = createServer({ functions, paramsValidationFunctions, createServer: createHttpServer })
 
 server.listen(port, () => console.log(onStartText))
