@@ -1,8 +1,8 @@
 import Twilio from 'twilio'
 
 const sendVerificationCode = async (phoneNumber, verificationCode) => {
-  const accountSid = 'ACff5c44f7a932acb3f57035070219a430'
-  const authToken = '9e7d4ee2bd6ab1fd5157eac84d9097eb'
+  const accountSid = process.env.TWILLIO_ACCOUNT_SID
+  const authToken = process.env.TWILLIO_AUTH_TOKEN
 
   const client = Twilio(accountSid, authToken)
 
