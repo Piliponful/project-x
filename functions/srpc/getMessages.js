@@ -38,9 +38,7 @@ const getMessagesByGroup = async (group, db) => {
 
   const userIds = Array.isArray(groupTree) ? groupTree : getUserIdsFromGroupTree(groupTree)
   const query = { userId: { $in: userIds } }
-  const messages = (await db.messagesCollection.find(query).toArray()).map(i => ({ ...omit(i, '_id'), id: i._id }))
-
-  return messages
+  return db.messagesCollection.find(query)
 }
 
 const getMessages = async ({ jwt }) => {
@@ -62,19 +60,25 @@ const getMessages = async ({ jwt }) => {
 
   const group = await groupsCollection.findOne({ selected: true })
 
-  if (!group) {
-    const messages = (await messagesCollection.find().toArray()).map(i => ({ ...omit(i, '_id'), id: i._id }))
+  const actions = await (group
+    ? getMessagesByGroup(group, { messagesCollection, groupsCollection })
+    : messagesCollection.find()).toArray().then(actions => actions.map(i => ({ ...omit(i, '_id'), id: i._id.toString() })))
 
-    await connectedClient.close()
+  const answers = actions.filter(i => i.parentMessageId)
+  const questions = actions.filter(i => !i.parentMessageId)
 
-    return { success: true, messages }
-  } else {
-    const messages = await getMessagesByGroup(group, { messagesCollection, groupsCollection })
+  const questionsWithAnswers = questions
+    .map(m => ({
+      ...m,
+      answersCount: {
+        yes: answers.filter(a => m.id === a.parentMessageId && a.content === 'Yes').length,
+        no: answers.filter(a => m.id === a.parentMessageId && a.content === 'No').length
+      }
+    }))
 
-    await connectedClient.close()
+  await connectedClient.close()
 
-    return { success: true, messages }
-  }
+  return { success: true, messages: questionsWithAnswers }
 }
 
 export default getMessages
