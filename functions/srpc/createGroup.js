@@ -34,7 +34,7 @@ const createGroup = async ({ jwt, messageId, content, name }) => {
     return { success: false }
   }
 
-  const newGroup = { userId, messageId, content, name }
+  const newGroup = { userId, messageId, content, name, createdAt: Date.now() }
 
   const result = await groupsCollection.insertOne(newGroup)
 
