@@ -73,7 +73,8 @@ const getMessages = async ({ jwt }) => {
       answersCount: {
         yes: answers.filter(a => m.id === a.parentMessageId && a.content === 'Yes').length,
         no: answers.filter(a => m.id === a.parentMessageId && a.content === 'No').length
-      }
+      },
+      currentUserAnswer: (answers.find(a => a.parentMessageId === m.id && a.userId === userId) || {}).content
     }))
 
   await connectedClient.close()
