@@ -14,13 +14,13 @@ const compositionFunctions = {
 
 const unravelGroup = async ({ messageId, content, groupIdLeft, groupIdRight, compositionType }, db) => {
   if (compositionType) {
-    const groupLeft = await db.groupsCollection.findOne({ groupId: groupIdLeft })
-    const groupRight = await db.groupsCollection.findOne({ groupId: groupIdRight })
+    const groupLeft = await db.groupsCollection.findOne({ _id: new ObjectID(groupIdLeft) })
+    const groupRight = await db.groupsCollection.findOne({ _id: new ObjectID(groupIdRight) })
 
-    return { groupLeft: unravelGroup(groupLeft), groupRight: unravelGroup(groupRight), compositionType }
+    return { groupLeft: await unravelGroup(groupLeft, db), groupRight: await unravelGroup(groupRight, db), compositionType }
   }
 
-  const messages = (await db.messagesCollection.find({ parentMessageId: messageId, content }).toArray())
+  const messages = await db.messagesCollection.find({ parentMessageId: messageId, content }).toArray()
 
   const userIds = messages.map(i => i.userId)
 
@@ -37,8 +37,8 @@ const getMessagesByGroup = async (group, db) => {
   const groupTree = await unravelGroup(group, db)
 
   const userIds = Array.isArray(groupTree) ? groupTree : getUserIdsFromGroupTree(groupTree)
-  const query = { userId: { $in: userIds } }
-  return db.messagesCollection.find(query)
+
+  return db.messagesCollection.find({ userId: { $in: userIds } })
 }
 
 const getMessages = async ({ jwt }) => {
@@ -60,9 +60,11 @@ const getMessages = async ({ jwt }) => {
 
   const group = await groupsCollection.findOne({ selected: true })
 
-  const actions = await (group
+  const actions1 = await (group
     ? getMessagesByGroup(group, { messagesCollection, groupsCollection })
-    : messagesCollection.find()).toArray().then(actions => actions.map(i => ({ ...omit(i, '_id'), id: i._id.toString() })))
+    : messagesCollection.find())
+
+  const actions = (await actions1.toArray()).map(i => ({ ...omit(i, '_id'), id: i._id.toString() }))
 
   const answers = actions.filter(i => i.parentMessageId)
   const questions = actions.filter(i => !i.parentMessageId)
