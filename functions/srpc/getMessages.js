@@ -1,37 +1,11 @@
-import { omit, difference, union, intersection } from 'lodash'
 import { ObjectID } from 'mongodb'
 import { decode as decodeJwt } from 'jwt-simple'
+import { omit } from 'lodash'
 
 import getConnectedClient from '../getConnectedClient'
+import { unravelGroup, getUserIdsFromGroupTree } from '../../entities/group'
 
 import { secret } from '../../constants/jwtSecret'
-
-const compositionFunctions = {
-  difference,
-  union,
-  intersection
-}
-
-const unravelGroup = async ({ messageId, content, groupIdLeft, groupIdRight, compositionType }, db) => {
-  if (compositionType) {
-    const groupLeft = await db.groupsCollection.findOne({ _id: new ObjectID(groupIdLeft) })
-    const groupRight = await db.groupsCollection.findOne({ _id: new ObjectID(groupIdRight) })
-
-    return { groupLeft: await unravelGroup(groupLeft, db), groupRight: await unravelGroup(groupRight, db), compositionType }
-  }
-
-  const messages = await db.messagesCollection.find({ parentMessageId: messageId, content }).toArray()
-
-  const userIds = messages.map(i => i.userId)
-
-  return userIds
-}
-
-const getUserIdsFromGroupTree = ({ groupLeft, groupRight, compositionType }) =>
-  compositionFunctions[compositionType](
-    Array.isArray(groupLeft) ? groupLeft : getUserIdsFromGroupTree(groupLeft),
-    Array.isArray(groupRight) ? groupRight : getUserIdsFromGroupTree(groupRight)
-  )
 
 const getMessagesByGroup = async (group, db) => {
   const groupTree = await unravelGroup(group, db)
