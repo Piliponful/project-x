@@ -2,6 +2,7 @@ import { decode as decodeJwt } from 'jwt-simple'
 import { ObjectID } from 'mongodb'
 
 import getConnectedClient from '../getConnectedClient'
+import { getGroupUserCount } from '../../entities/group'
 
 import { secret } from '../../constants/jwtSecret'
 
@@ -38,7 +39,14 @@ const createGroup = async ({ jwt, messageId, content, name }) => {
 
   const result = await groupsCollection.insertOne(newGroup)
 
-  return { success: true, group: { ...newGroup, id: result.insertedId } }
+  return {
+    success: true,
+    group: {
+      ...newGroup,
+      id: result.insertedId,
+      userCount: await getGroupUserCount(newGroup, { groupsCollection, messagesCollection })
+    }
+  }
 }
 
 export default createGroup

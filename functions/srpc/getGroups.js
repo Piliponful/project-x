@@ -3,17 +3,9 @@ import { ObjectID } from 'mongodb'
 import { omit } from 'lodash'
 
 import getConnectedClient from '../getConnectedClient'
-import { unravelGroup, getUserIdsFromGroupTree } from '../../entities/group'
+import { getGroupUserCount } from '../../entities/group'
 
 import { secret } from '../../constants/jwtSecret'
-
-const getGroupUserCount = async (group, db) => {
-  const groupTree = await unravelGroup(group, db)
-
-  const userIds = Array.isArray(groupTree) ? groupTree : getUserIdsFromGroupTree(groupTree)
-
-  return userIds.length
-}
 
 const getGroups = async ({ jwt }) => {
   const connectedClient = await getConnectedClient()
