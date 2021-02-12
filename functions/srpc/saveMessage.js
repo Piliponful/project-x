@@ -41,7 +41,16 @@ const saveMessage = async ({ jwt, content, parentMessageId }) => {
 
   await connectedClient.close()
 
-  return { success: true, message: { ...newMessage, id: result.insertedId } }
+  const answersCount = newMessage.parentMessageId ? {} : { answersCount: { yes: 0, no: 0 } }
+
+  return {
+    success: true,
+    message: {
+      ...newMessage,
+      id: result.insertedId,
+      ...answersCount
+    }
+  }
 }
 
 export default saveMessage

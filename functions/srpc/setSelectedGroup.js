@@ -3,6 +3,7 @@ import { ObjectID } from 'mongodb'
 import { omit } from 'lodash'
 
 import getConnectedClient from '../getConnectedClient'
+import { getGroupUserCount } from '../../entities/group'
 
 import { secret } from '../../constants/jwtSecret'
 
@@ -13,6 +14,7 @@ const setSelectedGroup = async ({ jwt, groupId }) => {
 
   const groupsCollection = db.collection('groups')
   const usersCollection = db.collection('users')
+  const messagesCollection = db.collection('messages')
 
   const { userId } = decodeJwt(jwt, secret)
 
@@ -38,7 +40,14 @@ const setSelectedGroup = async ({ jwt, groupId }) => {
     await groupsCollection.findOneAndUpdate({ _id: new ObjectID(groupId) }, { $set: { selected: true } })
   }
 
-  return { success: true, group: { ...omit(group, '_id'), id: group._id, selected: !isToggle } }
+  const selectedGroup = {
+    ...omit(group, '_id'),
+    id: group._id,
+    selected: !isToggle,
+    userCount: await getGroupUserCount(group, { groupsCollection, messagesCollection })
+  }
+
+  return { success: true, group: selectedGroup }
 }
 
 export default setSelectedGroup

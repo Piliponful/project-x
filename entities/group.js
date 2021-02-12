@@ -27,3 +27,12 @@ export const getUserIdsFromGroupTree = ({ groupLeft, groupRight, compositionType
     Array.isArray(groupLeft) ? groupLeft : getUserIdsFromGroupTree(groupLeft),
     Array.isArray(groupRight) ? groupRight : getUserIdsFromGroupTree(groupRight)
   )
+
+export const getGroupUserCount = async (group, db) => {
+  const groupTree = await unravelGroup(group, db)
+
+  const userIds = Array.isArray(groupTree) ? groupTree : getUserIdsFromGroupTree(groupTree)
+
+  return userIds.length
+}
+

@@ -47,8 +47,8 @@ const getMessages = async ({ jwt }) => {
     .map(m => ({
       ...m,
       answersCount: {
-        yes: answers.filter(a => m.id === a.parentMessageId && a.content === 'Yes').length,
-        no: answers.filter(a => m.id === a.parentMessageId && a.content === 'No').length
+        yes: answers.filter(a => m.id === a.parentMessageId && a.content.toLowerCase() === 'yes').length,
+        no: answers.filter(a => m.id === a.parentMessageId && a.content.toLowerCase() === 'no').length
       },
       currentUserAnswer: (answers.find(a => a.parentMessageId === m.id && a.userId === userId) || {}).content
     }))
