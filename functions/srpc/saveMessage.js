@@ -35,7 +35,7 @@ const saveMessage = async ({ jwt, content, parentMessageId }) => {
     }
   }
 
-  const newMessage = { userId, content, parentMessageId }
+  const newMessage = { userId, content, parentMessageId, createdAt: Date.now() }
 
   const result = await messagesCollection.insertOne(newMessage)
 
