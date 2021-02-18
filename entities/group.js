@@ -36,3 +36,10 @@ export const getGroupUserCount = async (group, db) => {
   return userIds.length
 }
 
+export const getMessagesByGroup = async (db, group, query) => {
+  const groupTree = await unravelGroup(group, db)
+
+  const userIds = Array.isArray(groupTree) ? groupTree : getUserIdsFromGroupTree(groupTree)
+
+  return db.messagesCollection.find({ ...query, userId: { $in: userIds } })
+}
