@@ -41,5 +41,5 @@ export const getMessagesByGroup = async (db, group, query) => {
 
   const userIds = Array.isArray(groupTree) ? groupTree : getUserIdsFromGroupTree(groupTree)
 
-  return db.messagesCollection.find({ ...query, userId: { $in: userIds } })
+  return db.messagesCollection.find({ ...query, userId: { $in: userIds } }).toArray()
 }

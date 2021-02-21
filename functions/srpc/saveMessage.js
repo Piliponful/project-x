@@ -1,15 +1,9 @@
 import { decode as decodeJwt } from 'jwt-simple'
 import { ObjectID } from 'mongodb'
 
-import getConnectedClient from '../getConnectedClient'
-
 import { secret } from '../../constants/jwtSecret'
 
-const saveMessage = async ({ jwt, content, parentMessageId }) => {
-  const connectedClient = await getConnectedClient()
-
-  const db = connectedClient.db()
-
+const saveMessage = async ({ db, jwt, content, parentMessageId }) => {
   const messagesCollection = db.collection('messages')
   const usersCollection = db.collection('users')
 
@@ -38,8 +32,6 @@ const saveMessage = async ({ jwt, content, parentMessageId }) => {
   const newMessage = { userId, content, parentMessageId, createdAt: Date.now() }
 
   const result = await messagesCollection.insertOne(newMessage)
-
-  await connectedClient.close()
 
   const answersCount = newMessage.parentMessageId ? {} : { answersCount: { yes: 0, no: 0 } }
 
