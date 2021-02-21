@@ -2,18 +2,13 @@ import { ObjectID } from 'mongodb'
 import { decode as decodeJwt } from 'jwt-simple'
 import { omit } from 'lodash'
 
-import getConnectedClient from '../../functions/getConnectedClient'
 import { getMessagesByGroup } from '../group'
 
 import { secret } from '../../constants/jwtSecret'
 
 const calcPercentage = (x, total) => Math.floor(x / total * 100)
 
-const getUnanimousQuestions = async ({ jwt }) => {
-  const connectedClient = await getConnectedClient()
-
-  const db = connectedClient.db()
-
+const getUnanimousQuestions = async ({ db, jwt }) => {
   const messagesCollection = db.collection('messages')
   const groupsCollection = db.collection('groups')
   const usersCollection = db.collection('users')
@@ -28,14 +23,14 @@ const getUnanimousQuestions = async ({ jwt }) => {
 
   const group = await groupsCollection.findOne({ selected: true })
 
-  const getActionsByQuery = query => (group
+  const getActionsByQuery = query => group
     ? getMessagesByGroup({ messagesCollection, groupsCollection }, group, query)
-    : messagesCollection.find(query))
+    : messagesCollection.find(query).toArray()
 
   const omitId = arr => arr.map(i => ({ ...omit(i, '_id'), id: i._id.toString() }))
 
-  const answers = omitId(await getActionsByQuery({ parentMessageId: { $ne: null } }).toArray())
-  const questions = omitId(await getActionsByQuery({ parentMessageId: { $eq: null } }).toArray())
+  const answers = omitId(await getActionsByQuery({ parentMessageId: { $ne: null } }))
+  const questions = omitId(await getActionsByQuery({ parentMessageId: { $eq: null } }))
 
   const questionsWithAnswers = questions
     .map(m => ({
@@ -53,8 +48,6 @@ const getUnanimousQuestions = async ({ jwt }) => {
 
     return yesPercentage <= 1 || yesPercentage >= 99
   })
-
-  await connectedClient.close()
 
   return { success: true, messages: unanimousQuestions }
 }

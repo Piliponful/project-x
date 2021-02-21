@@ -1,16 +1,11 @@
 import { decode as decodeJwt } from 'jwt-simple'
 import { ObjectID } from 'mongodb'
 
-import getConnectedClient from '../getConnectedClient'
 import { getGroupUserCount } from '../../entities/group'
 
 import { secret } from '../../constants/jwtSecret'
 
-const createCompositeGroup = async ({ jwt, name, groupIdLeft, groupIdRight, compositionType }) => {
-  const connectedClient = await getConnectedClient()
-
-  const db = connectedClient.db()
-
+const createCompositeGroup = async ({ db, jwt, name, groupIdLeft, groupIdRight, compositionType }) => {
   const groupsCollection = db.collection('groups')
   const usersCollection = db.collection('users')
   const messagesCollection = db.collection('messages')

@@ -10,8 +10,8 @@ const messageColumnToFunc = {
   unanimous: getUnanimousQuestions
 }
 
-const getMessages = async ({ jwt, messageColumn = 'mostAnswered' }) => {
-  const result = await messageColumnToFunc[messageColumn]({ jwt })
+const getMessages = async ({ db, jwt, messageColumn = 'mostAnswered' }) => {
+  const result = await messageColumnToFunc[messageColumn]({ db, jwt })
 
   return { ...result, messageColumn }
 }

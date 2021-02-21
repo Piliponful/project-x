@@ -2,16 +2,12 @@ import { decode as decodeJwt } from 'jwt-simple'
 import { ObjectID } from 'mongodb'
 import { omit } from 'lodash'
 
-import getConnectedClient from '../getConnectedClient'
 import { getGroupUserCount } from '../../entities/group'
 
 import { secret } from '../../constants/jwtSecret'
 
-const getGroups = async ({ jwt }) => {
-  const connectedClient = await getConnectedClient()
-
-  const db = connectedClient.db()
-
+const getGroups = async ({ db, jwt }) => {
+  try {
   const usersCollection = db.collection('users')
   const groupsCollection = db.collection('groups')
   const messagesCollection = db.collection('messages')
@@ -30,9 +26,10 @@ const getGroups = async ({ jwt }) => {
     groups.map(async g => ({ ...g, userCount: await getGroupUserCount(g, { groupsCollection, messagesCollection }) }))
   )
 
-  await connectedClient.close()
-
   return { success: true, groups: groupsWithUserCount }
+  } catch (e) {
+    console.log(e)
+  }
 }
 
 export default getGroups

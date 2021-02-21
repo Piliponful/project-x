@@ -1,16 +1,11 @@
 import { decode as decodeJwt } from 'jwt-simple'
 import { ObjectID } from 'mongodb'
 
-import getConnectedClient from '../getConnectedClient'
 import { getGroupUserCount } from '../../entities/group'
 
 import { secret } from '../../constants/jwtSecret'
 
-const createGroup = async ({ jwt, messageId, content, name }) => {
-  const connectedClient = await getConnectedClient()
-
-  const db = connectedClient.db()
-
+const createGroup = async ({ db, jwt, messageId, content, name }) => {
   const messagesCollection = db.collection('messages')
   const groupsCollection = db.collection('groups')
   const usersCollection = db.collection('users')

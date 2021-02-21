@@ -2,16 +2,13 @@ import { decode as decodeJwt } from 'jwt-simple'
 import { ObjectID } from 'mongodb'
 import { omit } from 'lodash'
 
-import getConnectedClient from '../getConnectedClient'
 import { getGroupUserCount } from '../../entities/group'
+
+import getMessages from './getMessages'
 
 import { secret } from '../../constants/jwtSecret'
 
-const setSelectedGroup = async ({ jwt, groupId }) => {
-  const connectedClient = await getConnectedClient()
-
-  const db = connectedClient.db()
-
+const setSelectedGroup = async ({ db, jwt, groupId }) => {
   const groupsCollection = db.collection('groups')
   const usersCollection = db.collection('users')
   const messagesCollection = db.collection('messages')
@@ -47,7 +44,15 @@ const setSelectedGroup = async ({ jwt, groupId }) => {
     userCount: await getGroupUserCount(group, { groupsCollection, messagesCollection })
   }
 
-  return { success: true, group: selectedGroup }
+  return {
+    success: true,
+    group: selectedGroup,
+    messages: {
+      mostAnswered: (await getMessages({ db, jwt, messageColumn: 'mostAnswered' })).messages,
+      unanimous: (await getMessages({ db, jwt, messageColumn: 'unanimous' })).messages,
+      latest: (await getMessages({ db, jwt, messageColumn: 'latest' })).messages
+    }
+  }
 }
 
 export default setSelectedGroup
