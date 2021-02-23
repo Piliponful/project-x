@@ -11,6 +11,7 @@ import createGroup from './functions/srpc/createGroup'
 import getGroups from './functions/srpc/getGroups'
 import setSelectedGroup from './functions/srpc/setSelectedGroup'
 import createCompositeGroup from './functions/srpc/createCompositeGroup'
+import getUserToken from './functions/srpc/getUserToken'
 
 import createUserValidation from './functions/paramsValidation/createUserValidation'
 import getMessagesValidation from './functions/paramsValidation/getMessagesValidation'
@@ -20,6 +21,7 @@ import createGroupValidation from './functions/paramsValidation/createGroupValid
 import getGroupsValidation from './functions/paramsValidation/getGroupsValidation'
 import setSelectedGroupValidation from './functions/paramsValidation/setSelectedGroupValidation'
 import createCompositeGroupValidation from './functions/paramsValidation/createCompositeGroupValidation'
+import getUserTokenValidation from './functions/paramsValidation/getUserTokenValidation'
 
 const main = async () => {
   const functions = await withDb({
@@ -30,7 +32,8 @@ const main = async () => {
     createGroup,
     getGroups,
     setSelectedGroup,
-    createCompositeGroup
+    createCompositeGroup,
+    getUserToken
   })
 
   const paramsValidationFunctions = {
@@ -41,7 +44,8 @@ const main = async () => {
     createGroup: createGroupValidation,
     getGroups: getGroupsValidation,
     setSelectedGroup: setSelectedGroupValidation,
-    createCompositeGroup: createCompositeGroupValidation
+    createCompositeGroup: createCompositeGroupValidation,
+    getUserToken: getUserTokenValidation
   }
 
   const port = 8080
