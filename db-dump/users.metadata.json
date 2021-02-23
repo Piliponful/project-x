@@ -1,0 +1,1 @@
+{"options":{"flags":{"$numberInt":"1"}},"indexes":[{"v":{"$numberInt":"2"},"key":{"_id":{"$numberInt":"1"}},"name":"_id_","ns":"test.users"}],"uuid":"c6e5724131fa4ebdb0053fab8bbbbcb5"}
