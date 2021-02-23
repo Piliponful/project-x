@@ -8,7 +8,7 @@ import { secret } from '../../../constants/jwtSecret'
 const createUser = async ({ db, username, phoneNumber, password }) => {
   const usersCollection = db.collection('users')
 
-  const passwordHash = bcrypt.hashSync('bacon', 8)
+  const passwordHash = bcrypt.hashSync(password, 8)
 
   const verificationCode = (Math.random() * 10000).toFixed(0)
 
