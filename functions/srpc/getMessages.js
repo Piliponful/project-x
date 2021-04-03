@@ -1,6 +1,6 @@
-import compose from 'compose-function'
+import compose from 'p-compose'
 
-import checkAndPassUser from '../../entities/user/checkAndPassUser'
+import withUser from '../../entities/db/withUser'
 
 import getMostAnsweredQuestions from '../../entities/messageColumns/getMostAnsweredQuestions'
 import getLatestQuestions from '../../entities/messageColumns/getLatestQuestions'
@@ -20,4 +20,4 @@ const getMessages = async ({ db, user, messageColumn = 'mostAnswered' }) => {
   return { ...result, messageColumn }
 }
 
-export default compose(checkAndPassUser, getMessages)
+export default compose(getMessages, withUser)

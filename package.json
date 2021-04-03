@@ -19,7 +19,8 @@
     "lodash": "^4.17.15",
     "mongodb": "^3.5.5",
     "nodemon": "^2.0.2",
-    "srpc-framework": "^2.0.10",
+    "p-compose": "^1.0.1",
+    "srpc-framework": "^2.0.11",
     "standard": "^14.3.3",
     "twilio": "^3.42.0"
   }

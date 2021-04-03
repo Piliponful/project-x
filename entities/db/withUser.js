@@ -5,7 +5,7 @@ import { ObjectID } from 'mongodb'
 
 import { secret } from '../../constants/jwtSecret'
 
-const checkAndPassUser = async ({ db, jwt }) => {
+const checkAndPassUser = async ({ db, jwt, ...params }) => {
   const usersCollection = db.collection('users')
 
   const { userId } = decodeJwt(jwt, secret)
@@ -16,7 +16,7 @@ const checkAndPassUser = async ({ db, jwt }) => {
     return { success: false, message: 'User not found' }
   }
 
-  return { db, user: { ...omit(user, '_id'), id: user._id } }
+  return { ...params, db, user: { ...omit(user, '_id'), id: user._id } }
 }
 
 export default checkAndPassUser

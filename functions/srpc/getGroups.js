@@ -1,8 +1,8 @@
 import { omit } from 'lodash'
-import compose from 'compose-function'
+import compose from 'p-compose'
 
 import { getGroupUserCount } from '../../entities/group'
-import checkAndPassUser from '../../entities/user/checkAndPassUser'
+import withUser from '../../entities/db/withUser'
 
 const getGroups = async ({ db, jwt }) => {
   const groupsCollection = db.collection('groups')
@@ -17,4 +17,4 @@ const getGroups = async ({ db, jwt }) => {
   return { success: true, groups: groupsWithUserCount }
 }
 
-export default compose(checkAndPassUser, getGroups)
+export default compose(getGroups, withUser)

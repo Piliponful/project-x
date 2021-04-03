@@ -1,7 +1,7 @@
-import compose from 'compose-function'
+import compose from 'p-compose'
 import { ObjectID } from 'mongodb'
 
-import checkAndPassUser from '../../entities/user/checkAndPassUser'
+import withUser from '../../entities/db/withUser'
 
 const saveMessage = async ({ db, user, content, parentMessageId }) => {
   const messagesCollection = db.collection('messages')
@@ -36,4 +36,4 @@ const saveMessage = async ({ db, user, content, parentMessageId }) => {
   }
 }
 
-export default compose(checkAndPassUser, saveMessage)
+export default compose(saveMessage, withUser)

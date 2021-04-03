@@ -1,9 +1,9 @@
 import { ObjectID } from 'mongodb'
 import { omit } from 'lodash'
-import compose from 'compose-function'
+import compose from 'p-compose'
 
 import { getGroupUserCount } from '../../entities/group'
-import checkAndPassUser from '../../entities/user/checkAndPassUser'
+import withUser from '../../entities/db/withUser'
 
 import getMessages from './getMessages'
 
@@ -45,4 +45,4 @@ const setSelectedGroup = async ({ db, user, groupId }) => {
   }
 }
 
-export default compose(checkAndPassUser, setSelectedGroup)
+export default compose(setSelectedGroup, withUser)
