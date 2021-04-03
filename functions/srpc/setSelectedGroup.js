@@ -14,7 +14,7 @@ const setSelectedGroup = async ({ db, user, groupId }) => {
   const group = await groupsCollection.findOne({ _id: new ObjectID(groupId) })
 
   if (!group) {
-    return { success: false }
+    throw new Error('Group not found')
   }
 
   const currentlySelectedGroup = await groupsCollection.findOne({ selected: true })

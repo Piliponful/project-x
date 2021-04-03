@@ -4,7 +4,7 @@ import compose from 'p-compose'
 import { getGroupUserCount } from '../../entities/group'
 import withUser from '../../entities/db/withUser'
 
-const getGroups = async ({ db, jwt }) => {
+const getGroups = async ({ db }) => {
   const groupsCollection = db.collection('groups')
   const messagesCollection = db.collection('messages')
 

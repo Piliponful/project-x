@@ -9,11 +9,11 @@ const getUserToken = async ({ db, username, password }) => {
   const user = await usersCollection.findOne({ username })
 
   if (!user) {
-    return { success: false }
+    throw new Error('User not found')
   }
 
   if (!bcrypt.compareSync(password, user.password)) {
-    return { success: false }
+    throw new Error('Passwords doesn\'t match')
   }
 
   const jwt = encodeJwt({ userId: user._id }, secret)

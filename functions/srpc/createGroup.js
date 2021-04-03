@@ -11,13 +11,13 @@ const createGroup = async ({ db, user, messageId, content, name }) => {
   const message = await messagesCollection.findOne({ _id: new ObjectID(messageId) })
 
   if (!message) {
-    return { success: false }
+    throw new Error('Message not found')
   }
 
   const group = await groupsCollection.findOne({ messageId, userId: user.id, content })
 
   if (group) {
-    return { success: false }
+    throw new Error('Group not found')
   }
 
   const newGroup = { userId: user.id, messageId, content, name, createdAt: Date.now() }
