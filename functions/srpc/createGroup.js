@@ -1,22 +1,12 @@
-import { decode as decodeJwt } from 'jwt-simple'
 import { ObjectID } from 'mongodb'
+import compose from 'compose-function'
 
 import { getGroupUserCount } from '../../entities/group'
+import checkAndPassUser from '../../entities/user/checkAndPassUser'
 
-import { secret } from '../../constants/jwtSecret'
-
-const createGroup = async ({ db, jwt, messageId, content, name }) => {
+const createGroup = async ({ db, user, messageId, content, name }) => {
   const messagesCollection = db.collection('messages')
   const groupsCollection = db.collection('groups')
-  const usersCollection = db.collection('users')
-
-  const { userId } = decodeJwt(jwt, secret)
-
-  const user = await usersCollection.findOne({ _id: new ObjectID(userId), verificationCode: { $exists: false } })
-
-  if (!user) {
-    return { success: false }
-  }
 
   const message = await messagesCollection.findOne({ _id: new ObjectID(messageId) })
 
@@ -24,13 +14,13 @@ const createGroup = async ({ db, jwt, messageId, content, name }) => {
     return { success: false }
   }
 
-  const group = await groupsCollection.findOne({ messageId, userId, content })
+  const group = await groupsCollection.findOne({ messageId, userId: user.id, content })
 
   if (group) {
     return { success: false }
   }
 
-  const newGroup = { userId, messageId, content, name, createdAt: Date.now() }
+  const newGroup = { userId: user.id, messageId, content, name, createdAt: Date.now() }
 
   const result = await groupsCollection.insertOne(newGroup)
 
@@ -44,4 +34,4 @@ const createGroup = async ({ db, jwt, messageId, content, name }) => {
   }
 }
 
-export default createGroup
+export default compose(checkAndPassUser, createGroup)

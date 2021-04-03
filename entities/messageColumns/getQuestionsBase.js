@@ -1,23 +1,10 @@
-import { ObjectID } from 'mongodb'
-import { decode as decodeJwt } from 'jwt-simple'
 import { omit } from 'lodash'
 
 import { getMessagesByGroup } from '../group'
 
-import { secret } from '../../constants/jwtSecret'
-
-const getQuestionsBase = async ({ db, jwt }) => {
+const getQuestionsBase = async ({ db, user }) => {
   const messagesCollection = db.collection('messages')
   const groupsCollection = db.collection('groups')
-  const usersCollection = db.collection('users')
-
-  const { userId } = decodeJwt(jwt, secret)
-
-  const user = await usersCollection.findOne({ _id: new ObjectID(userId), verificationCode: { $exists: false } })
-
-  if (!user) {
-    throw new Error('User not found')
-  }
 
   const group = await groupsCollection.findOne({ selected: true })
 
@@ -38,7 +25,7 @@ const getQuestionsBase = async ({ db, jwt }) => {
         yes: answers.filter(a => m.id === a.parentMessageId && a.content.toLowerCase() === 'yes').length,
         no: answers.filter(a => m.id === a.parentMessageId && a.content.toLowerCase() === 'no').length
       },
-      currentUserAnswer: (allAnswers.find(a => a.parentMessageId === m.id && a.userId === userId) || {}).content
+      currentUserAnswer: (allAnswers.find(a => a.parentMessageId === m.id && a.userId === user.id) || {}).content
     }))
 
   return questionsWithAnswers

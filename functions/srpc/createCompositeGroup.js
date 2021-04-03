@@ -1,22 +1,12 @@
-import { decode as decodeJwt } from 'jwt-simple'
 import { ObjectID } from 'mongodb'
+import compose from 'compose-function'
 
 import { getGroupUserCount } from '../../entities/group'
+import checkAndPassUser from '../../entities/user/checkAndPassUser'
 
-import { secret } from '../../constants/jwtSecret'
-
-const createCompositeGroup = async ({ db, jwt, name, groupIdLeft, groupIdRight, compositionType }) => {
+const createCompositeGroup = async ({ db, user, name, groupIdLeft, groupIdRight, compositionType }) => {
   const groupsCollection = db.collection('groups')
-  const usersCollection = db.collection('users')
   const messagesCollection = db.collection('messages')
-
-  const { userId } = decodeJwt(jwt, secret)
-
-  const user = await usersCollection.findOne({ _id: new ObjectID(userId), verificationCode: { $exists: false } })
-
-  if (!user) {
-    return { success: false }
-  }
 
   const group1 = await groupsCollection.findOne({ _id: new ObjectID(groupIdLeft) })
   const group2 = await groupsCollection.findOne({ _id: new ObjectID(groupIdRight) })
@@ -26,7 +16,7 @@ const createCompositeGroup = async ({ db, jwt, name, groupIdLeft, groupIdRight, 
   }
 
   const newGroup = {
-    userId,
+    userId: user.id,
     name,
     groupIdLeft,
     groupIdRight,
@@ -46,4 +36,4 @@ const createCompositeGroup = async ({ db, jwt, name, groupIdLeft, groupIdRight, 
   }
 }
 
-export default createCompositeGroup
+export default compose(checkAndPassUser, createCompositeGroup)

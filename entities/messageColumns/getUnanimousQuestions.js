@@ -2,8 +2,8 @@ import getQuestionsBase from './getQuestionsBase'
 
 const calcPercentage = (x, total) => Math.floor(x / total * 100)
 
-const getUnanimousQuestions = async ({ db, jwt }) => {
-  const questionsWithAnswers = await getQuestionsBase({ db, jwt })
+const getUnanimousQuestions = async ({ db, user }) => {
+  const questionsWithAnswers = await getQuestionsBase({ db, user })
 
   const unanimousQuestions = questionsWithAnswers.filter(q => {
     const total = q.answersCount.yes + q.answersCount.no

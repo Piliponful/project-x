@@ -1,22 +1,13 @@
-import { decode as decodeJwt } from 'jwt-simple'
+import compose from 'compose-function'
 import { ObjectID } from 'mongodb'
 
-import { secret } from '../../constants/jwtSecret'
+import checkAndPassUser from '../../entities/user/checkAndPassUser'
 
-const saveMessage = async ({ db, jwt, content, parentMessageId }) => {
+const saveMessage = async ({ db, user, content, parentMessageId }) => {
   const messagesCollection = db.collection('messages')
-  const usersCollection = db.collection('users')
-
-  const { userId } = decodeJwt(jwt, secret)
-
-  const user = await usersCollection.findOne({ _id: new ObjectID(userId), verificationCode: { $exists: false } })
-
-  if (!user) {
-    return { success: false }
-  }
 
   if (parentMessageId) {
-    const responseMessage = await messagesCollection.findOne({ userId, parentMessageId })
+    const responseMessage = await messagesCollection.findOne({ userId: user.id, parentMessageId })
 
     if (responseMessage) {
       return { success: false }
@@ -24,12 +15,12 @@ const saveMessage = async ({ db, jwt, content, parentMessageId }) => {
 
     const parentMessage = await messagesCollection.findOne({ _id: new ObjectID(parentMessageId) })
 
-    if (parentMessage.userId === userId) {
+    if (parentMessage.userId === user.id) {
       return { success: false }
     }
   }
 
-  const newMessage = { userId, content, parentMessageId, createdAt: Date.now() }
+  const newMessage = { userId: user.id, content, parentMessageId, createdAt: Date.now() }
 
   const result = await messagesCollection.insertOne(newMessage)
 
@@ -45,4 +36,4 @@ const saveMessage = async ({ db, jwt, content, parentMessageId }) => {
   }
 }
 
-export default saveMessage
+export default compose(checkAndPassUser, saveMessage)
