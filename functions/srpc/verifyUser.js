@@ -11,13 +11,13 @@ const verifyUser = async ({ db, jwt, verificationCode }) => {
 
   const user = await usersCollection.findOne({ _id: new ObjectID(userId), verificationCode })
 
-  if (user) {
-    await usersCollection.updateOne({ _id: new ObjectID(userId) }, { $unset: { verificationCode: '' } })
-
-    return { success: true }
-  } else {
+  if (!user) {
     return { success: false }
   }
+
+  await usersCollection.updateOne({ _id: new ObjectID(userId) }, { $unset: { verificationCode: '' } })
+
+  return { success: true }
 }
 
 export default verifyUser

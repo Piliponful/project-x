@@ -1,3 +1,7 @@
+import compose from 'compose-function'
+
+import checkAndPassUser from '../../entities/user/checkAndPassUser'
+
 import getMostAnsweredQuestions from '../../entities/messageColumns/getMostAnsweredQuestions'
 import getLatestQuestions from '../../entities/messageColumns/getLatestQuestions'
 import getControversialQuestions from '../../entities/messageColumns/getControversialQuestions'
@@ -10,10 +14,10 @@ const messageColumnToFunc = {
   unanimous: getUnanimousQuestions
 }
 
-const getMessages = async ({ db, jwt, messageColumn = 'mostAnswered' }) => {
-  const result = await messageColumnToFunc[messageColumn]({ db, jwt })
+const getMessages = async ({ db, user, messageColumn = 'mostAnswered' }) => {
+  const result = await messageColumnToFunc[messageColumn]({ db, user })
 
   return { ...result, messageColumn }
 }
 
-export default getMessages
+export default compose(checkAndPassUser, getMessages)

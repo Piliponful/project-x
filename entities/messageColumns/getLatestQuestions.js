@@ -2,8 +2,8 @@ import { orderBy } from 'lodash'
 
 import getQuestionsBase from './getQuestionsBase'
 
-const getLatestQuestions = async ({ db, jwt }) => {
-  const questionsWithAnswers = await getQuestionsBase({ db, jwt })
+const getLatestQuestions = async ({ db, user }) => {
+  const questionsWithAnswers = await getQuestionsBase({ db, user })
 
   const orderedQuestions = orderBy(questionsWithAnswers, 'createdAt', 'desc')
 
