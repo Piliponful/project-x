@@ -1,8 +1,8 @@
 import { ObjectID } from 'mongodb'
-import compose from 'compose-function'
+import compose from 'p-compose'
 
 import { getGroupUserCount } from '../../entities/group'
-import checkAndPassUser from '../../entities/user/checkAndPassUser'
+import withUser from '../../entities/db/withUser'
 
 const createGroup = async ({ db, user, messageId, content, name }) => {
   const messagesCollection = db.collection('messages')
@@ -34,4 +34,4 @@ const createGroup = async ({ db, user, messageId, content, name }) => {
   }
 }
 
-export default compose(checkAndPassUser, createGroup)
+export default compose(createGroup, withUser)
