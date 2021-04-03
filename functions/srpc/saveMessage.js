@@ -10,13 +10,13 @@ const saveMessage = async ({ db, user, content, parentMessageId }) => {
     const responseMessage = await messagesCollection.findOne({ userId: user.id, parentMessageId })
 
     if (responseMessage) {
-      return { success: false }
+      throw new Error('User tries to answer question he already answered')
     }
 
     const parentMessage = await messagesCollection.findOne({ _id: new ObjectID(parentMessageId) })
 
     if (parentMessage.userId === user.id) {
-      return { success: false }
+      throw new Error('User tries to answer his own question')
     }
   }
 

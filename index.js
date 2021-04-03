@@ -1,7 +1,9 @@
 import { createServer } from 'srpc-framework'
 import { createServer as createHttpServer } from 'http'
+import compose from 'p-compose'
 
 import withDb from './entities/db/withDb'
+import withErrorHandling from './entities/withErrorHandling'
 
 import saveMessage from './functions/srpc/saveMessage'
 import getMessages from './functions/srpc/getMessages'
@@ -24,7 +26,7 @@ import createCompositeGroupValidation from './functions/paramsValidation/createC
 import getUserTokenValidation from './functions/paramsValidation/getUserTokenValidation'
 
 const main = async () => {
-  const functions = await withDb({
+  const functionsList = {
     createUser,
     getMessages,
     saveMessage,
@@ -34,7 +36,9 @@ const main = async () => {
     setSelectedGroup,
     createCompositeGroup,
     getUserToken
-  })
+  }
+
+  const functions = await compose(withErrorHandling, withDb)(functionsList)
 
   const paramsValidationFunctions = {
     createUser: createUserValidation,

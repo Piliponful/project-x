@@ -13,7 +13,7 @@ const checkAndPassUser = async ({ db, jwt, ...params }) => {
   const user = await usersCollection.findOne({ _id: new ObjectID(userId), verificationCode: { $exists: false } })
 
   if (!user) {
-    return { success: false, message: 'User not found' }
+    throw new Error('User not found')
   }
 
   return { ...params, db, user: { ...omit(user, '_id'), id: user._id } }

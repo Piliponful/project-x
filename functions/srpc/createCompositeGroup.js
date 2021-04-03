@@ -12,7 +12,7 @@ const createCompositeGroup = async ({ db, user, name, groupIdLeft, groupIdRight,
   const group2 = await groupsCollection.findOne({ _id: new ObjectID(groupIdRight) })
 
   if (!group1 || !group2) {
-    return { success: false }
+    throw new Error('One of groups is not present')
   }
 
   const newGroup = {
