@@ -16,7 +16,7 @@ const checkAndPassUser = async ({ db, jwt, ...params }) => {
     throw new Error('User not found')
   }
 
-  return { ...params, db, user: { ...omit(user, '_id'), id: user._id } }
+  return { ...params, db, user: { ...omit(user, '_id'), id: user._id.toString() } }
 }
 
 export default checkAndPassUser
