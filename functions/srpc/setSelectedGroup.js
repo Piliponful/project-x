@@ -5,8 +5,6 @@ import compose from 'p-compose'
 import { getGroupUserCount } from '../../entities/group'
 import withUser from '../../entities/db/withUser'
 
-import getMessages from './getMessages'
-
 const setSelectedGroup = async ({ db, user, groupId }) => {
   const groupsCollection = db.collection('groups')
   const messagesCollection = db.collection('messages')
@@ -36,12 +34,7 @@ const setSelectedGroup = async ({ db, user, groupId }) => {
 
   return {
     success: true,
-    group: selectedGroup,
-    messages: {
-      mostAnswered: (await getMessages({ db, user, messageColumn: 'mostAnswered' })).messages,
-      unanimous: (await getMessages({ db, user, messageColumn: 'unanimous' })).messages,
-      latest: (await getMessages({ db, user, messageColumn: 'latest' })).messages
-    }
+    group: selectedGroup
   }
 }
 
