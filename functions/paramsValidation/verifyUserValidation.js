@@ -1,5 +1,5 @@
-const verifyUserValidation = ({ jwt, verificationCode }) => {
-  return jwt && verificationCode
+const verifyUserValidation = ({ userId, verificationCode }) => {
+  return verificationCode
 }
 
 module.exports = verifyUserValidation

@@ -1,13 +1,10 @@
-import { decode as decodeJwt } from 'jwt-simple'
-
+import { encode as encodeJwt } from 'jwt-simple'
 import { ObjectID } from 'mongodb'
 
 import { secret } from '../../constants/jwtSecret'
 
-const verifyUser = async ({ db, jwt, verificationCode }) => {
+const verifyUser = async ({ db, userId, verificationCode }) => {
   const usersCollection = db.collection('users')
-
-  const { userId } = decodeJwt(jwt, secret)
 
   const user = await usersCollection.findOne({ _id: new ObjectID(userId), verificationCode })
 
@@ -17,7 +14,9 @@ const verifyUser = async ({ db, jwt, verificationCode }) => {
 
   await usersCollection.updateOne({ _id: new ObjectID(userId) }, { $unset: { verificationCode: '' } })
 
-  return { success: true }
+  const jwt = encodeJwt({ userId }, secret)
+
+  return { success: true, jwt }
 }
 
 export default verifyUser

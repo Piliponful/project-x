@@ -9,7 +9,7 @@ const sendVerificationCode = async (phoneNumber, verificationCode) => {
   await client.messages
     .create({
       body: `Verification code: ${verificationCode}`,
-      from: '+12392562369',
+      messagingServiceSid: 'MGe7d45bac30457944360f5584f121d07f',
       to: phoneNumber
     })
 

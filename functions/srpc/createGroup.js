@@ -17,7 +17,7 @@ const createGroup = async ({ db, user, messageId, content, name }) => {
   const group = await groupsCollection.findOne({ messageId, userId: user.id, content })
 
   if (group) {
-    throw new Error('Group not found')
+    throw new Error('Group already exist')
   }
 
   const newGroup = { userId: user.id, messageId, content, name, createdAt: Date.now() }
