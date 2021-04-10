@@ -4,6 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
+    "start": "node -r esm index",
     "dev": "nodemon -r esm index",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
