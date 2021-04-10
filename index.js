@@ -1,3 +1,6 @@
+/* eslint-disable */
+require('dotenv').config()
+
 import { createServer } from 'srpc-framework'
 import { createServer as createHttpServer } from 'http'
 import compose from 'p-compose'
@@ -24,6 +27,7 @@ import getGroupsValidation from './functions/paramsValidation/getGroupsValidatio
 import setSelectedGroupValidation from './functions/paramsValidation/setSelectedGroupValidation'
 import createCompositeGroupValidation from './functions/paramsValidation/createCompositeGroupValidation'
 import getUserTokenValidation from './functions/paramsValidation/getUserTokenValidation'
+
 
 const main = async () => {
   const functionsList = {
@@ -54,8 +58,6 @@ const main = async () => {
 
   const port = 8080
   const onStartText = `Server successfully launched on port ${port}`
-
-  require('dotenv').config()
 
   const server = createServer({ functions, paramsValidationFunctions, createServer: createHttpServer })
 
