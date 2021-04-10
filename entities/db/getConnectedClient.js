@@ -1,7 +1,9 @@
 import { MongoClient } from 'mongodb'
 
 const getConnectedClient = async () => {
-  const url = 'mongodb://piliponful:password123@localhost:27017/test'
+  const { DB_HOST, DB_USER, DB_USER_PASSWORD, DB_NAME, DB_PORT } = process.env
+
+  const url = `mongodb://${DB_USER}:${DB_USER_PASSWORD}@${DB_HOST}${DB_PORT ? `:${DB_PORT}` : ''}/${DB_NAME}`
 
   const client = await (new MongoClient(url, { useUnifiedTopology: true })).connect()
 
