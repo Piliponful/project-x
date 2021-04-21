@@ -14,7 +14,7 @@ const verifyUser = async ({ db, userId, verificationCode }) => {
 
   await usersCollection.updateOne({ _id: new ObjectID(userId) }, { $unset: { verificationCode: '' } })
 
-  const jwt = encodeJwt({ userId }, secret)
+  const jwt = encodeJwt({ userId, username: user.username }, secret)
 
   return { success: true, jwt }
 }

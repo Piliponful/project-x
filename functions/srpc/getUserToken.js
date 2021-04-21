@@ -16,7 +16,7 @@ const getUserToken = async ({ db, username, password }) => {
     throw new Error('Passwords doesn\'t match')
   }
 
-  const jwt = encodeJwt({ userId: user._id }, secret)
+  const jwt = encodeJwt({ userId: user._id, username }, secret)
 
   return { success: true, jwt }
 }
